@@ -1,0 +1,13 @@
+{
+    "json.schemas": [
+        {
+            "fileMatch": [
+                "*.json",
+                "bun.lock"
+            ],
+            "schema": {
+                "allowTrailingCommas": true
+            }
+        }
+    ]
+}
