@@ -25,28 +25,24 @@ const selectedMonth = ref()
 const categories = ref(['猫粮狗粮', '医疗费', '绝育手术'])
 const selectedCategory = ref()
 
-type Transaction = {
+interface Expense {
   id: number
   date: string
   description: string
-  amount: string
-  category: string
+  amount: number
+  category_id: number
+  receipt_url: string
 }
 
-const columns: TableColumn<Transaction>[] = [
-  {accessorKey: "date", header: "日期"},
-  {accessorKey: "description", header: "描述"},
-  {accessorKey: "amount", header: "金额"},
-  {accessorKey: "category", header: "分类"},
-  {accessorKey: "actions", header: "操作"}
-]
+const { data: transactions } = await useFetch<Expense[]>('/api/expenses')
 
-const transactions = ref<Transaction[]>([
-  { id: 1, date: '2025-07-15', description: '购买猫粮', amount: '-¥256.00', category: '猫粮狗粮' },
-  { id: 2, date: '2025-07-14', description: '收到捐款-张女士', amount: '+¥500.00', category: '捐款' },
-  { id: 3, date: '2025-07-12', description: '猫咪绝育手术', amount: '-¥800.00', category: '绝育手术' },
-  { id: 4, date: '2025-07-10', description: '皮肤病治疗', amount: '-¥450.00', category: '医疗费' },
-])
+const columns: TableColumn<Expense>[] = [
+  { accessorKey: 'date', header: '日期' },
+  { accessorKey: 'description', header: '摘要' },
+  { accessorKey: 'amount', header: '金额' },
+  { accessorKey: 'category_id', header: '分类ID' },
+  { accessorKey: 'actions', header: '操作' }
+]
 
 const chartOptions = ref({
   title: {
