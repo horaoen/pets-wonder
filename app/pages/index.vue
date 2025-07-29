@@ -30,7 +30,6 @@
 
 <script setup>
 import { ref } from 'vue'
-
 const monthlyIncome = ref('12,345.67')
 const monthlyExpense = ref('8,765.43')
 const currentBalance = ref('25,876.12')
