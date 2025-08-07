@@ -1,17 +1,19 @@
-CREATE TABLE `categories` (
+CREATE TABLE `dictionaries` (
 	`id` integer PRIMARY KEY AUTOINCREMENT NOT NULL,
-	`name` text NOT NULL
+	`type` text NOT NULL,
+	`key` text NOT NULL,
+	`value` text NOT NULL,
+	`text` text DEFAULT '',
+	`description` text
 );
 --> statement-breakpoint
-CREATE UNIQUE INDEX `categories_name_unique` ON `categories` (`name`);--> statement-breakpoint
 CREATE TABLE `expenses` (
 	`id` integer PRIMARY KEY AUTOINCREMENT NOT NULL,
 	`description` text NOT NULL,
 	`amount` real NOT NULL,
 	`date` integer NOT NULL,
 	`receipt_url` text,
-	`category_id` integer,
-	FOREIGN KEY (`category_id`) REFERENCES `categories`(`id`) ON UPDATE no action ON DELETE no action
+	`category_id` integer
 );
 --> statement-breakpoint
 CREATE TABLE `incomes` (
@@ -19,6 +21,5 @@ CREATE TABLE `incomes` (
 	`description` text NOT NULL,
 	`amount` real NOT NULL,
 	`date` integer NOT NULL,
-	`category_id` integer,
-	FOREIGN KEY (`category_id`) REFERENCES `categories`(`id`) ON UPDATE no action ON DELETE no action
+	`category_id` integer
 );

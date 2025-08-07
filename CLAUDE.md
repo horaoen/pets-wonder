@@ -93,3 +93,7 @@ The application uses three main tables:
 1. Update `server/db/schema.ts` with new tables or columns
 2. Run `bun run db:generate` to create migration files
 3. Run `bun run db:migrate` to apply migrations to the database
+
+### ui component
+1. 我使用这个网站的最新版本的组件，https://ui.nuxt.com/components/
+2. 不清楚怎么使用组件时你可以查看文档

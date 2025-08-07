@@ -92,23 +92,42 @@ const chartOptions = ref({
 
 <template>
   <div>
-    <h2 class="text-2xl font-semibold mb-4">财务报表</h2>
-
-    <div class="flex gap-4 mb-4">
-      <UInput v-model="startDate" type="date" placeholder="开始日期" />
-      <UInput v-model="endDate" type="date" placeholder="结束日期" />
-      <USelectMenu v-model="selectedCategory" :items="categories" placeholder="选择分类" />
-      <UButton @click="searchByDateRange">搜索</UButton>
+    <div class="flex justify-between items-center mb-4">
+      <h2 class="text-2xl font-semibold">财务报表</h2>
+      <UButton to="/finance/expense/add" icon="i-heroicons-plus">添加支出</UButton>
     </div>
-    <UTable :columns="columns" :data="transactions">
-      <template #actions-cell="{ row }">
-        <UButton :to="`/finance/expense/${row.id}`">详情</UButton>
-      </template>
-    </UTable>
-    <ClientOnly>
-      <div class="mt-8" style="height: 400px;">
-        <v-chart :option="chartOptions" />
+
+    <div class="flex flex-wrap gap-4 mb-6 p-4 bg-gray-50 rounded-lg">
+      <div class="flex-1 min-w-[200px]">
+        <label class="block text-sm font-medium text-gray-700 mb-1">开始日期</label>
+        <UInput v-model="startDate" type="date" size="lg" />
       </div>
-    </ClientOnly>
+      <div class="flex-1 min-w-[200px]">
+        <label class="block text-sm font-medium text-gray-700 mb-1">结束日期</label>
+        <UInput v-model="endDate" type="date" size="lg" />
+      </div>
+      <div class="flex-1 min-w-[200px]">
+        <label class="block text-sm font-medium text-gray-700 mb-1">分类</label>
+        <USelectMenu v-model="selectedCategory" :items="categories" placeholder="选择分类" size="lg" />
+      </div>
+      <div class="flex items-end">
+        <UButton @click="searchByDateRange" size="lg" class="h-full">搜索</UButton>
+      </div>
+    </div>
+    <div class="bg-white rounded-lg shadow overflow-hidden">
+      <UTable :columns="columns" :data="transactions" class="w-full">
+        <template #actions-cell="{ row }">
+          <UButton :to="`/finance/expense/${row.id}`" variant="soft" size="sm">详情</UButton>
+        </template>
+      </UTable>
+    </div>
+    <div class="mt-8 bg-white rounded-lg shadow p-6">
+      <h3 class="text-xl font-semibold mb-4">支出分类占比</h3>
+      <ClientOnly>
+        <div style="height: 400px;">
+          <v-chart :option="chartOptions" />
+        </div>
+      </ClientOnly>
+    </div>
   </div>
 </template>

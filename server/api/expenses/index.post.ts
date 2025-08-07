@@ -18,7 +18,7 @@ export default defineEventHandler(async (event) => {
     const newExpenseData = {
         description: body.description,
         amount: body.amount,
-        date: new Date(body.date),
+        date: body.date, // 日期已经是时间戳格式
         receiptUrl: body.receiptUrl,
         categoryId: body.categoryId,
     };

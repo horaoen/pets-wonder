@@ -1,8 +1,12 @@
 import { int, real, sqliteTable, text } from "drizzle-orm/sqlite-core";
 
-export const categoriesTable = sqliteTable("categories", {
+export const dictionariesTable = sqliteTable("dictionaries", {
     id: int("id").primaryKey({ autoIncrement: true }),
-    name: text("name").notNull().unique(),
+    type: text("type").notNull(),
+    key: text("key").notNull(),
+    value: text("value").notNull(),
+    text: text("text").default(""),
+    description: text("description"),
 });
 
 export const expensesTable = sqliteTable("expenses", {
@@ -11,7 +15,7 @@ export const expensesTable = sqliteTable("expenses", {
     amount: real("amount").notNull(),
     date: int("date", { mode: "timestamp" }).notNull(),
     receiptUrl: text("receipt_url"),
-    categoryId: int("category_id").references(() => categoriesTable.id),
+    categoryId: int("category_id"),
 });
 
 export const incomesTable = sqliteTable("incomes", {
@@ -19,5 +23,5 @@ export const incomesTable = sqliteTable("incomes", {
     description: text("description").notNull(),
     amount: real("amount").notNull(),
     date: int("date", { mode: "timestamp" }).notNull(),
-    categoryId: int("category_id").references(() => categoriesTable.id),
+    categoryId: int("category_id"),
 });
