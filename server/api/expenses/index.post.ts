@@ -1,6 +1,6 @@
 import { defineEventHandler, readBody, createError } from 'h3'
-import { useDatabase } from '../../utils/database'
-import { expensesTable } from '../../db/schema';
+import { useDatabase } from '~~/server/utils/database'
+import { expensesTable } from '~~/server/db/schema';
 
 export default defineEventHandler(async (event) => {
     const db = useDatabase();

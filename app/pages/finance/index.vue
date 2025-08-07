@@ -1,11 +1,10 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref } from 'vue'
 import type { TableColumn } from '@nuxt/ui'
 import VChart from 'vue-echarts';
 import { use } from 'echarts/core';
 import { CanvasRenderer } from 'echarts/renderers';
 import { PieChart } from 'echarts/charts';
-import { CalendarDate, getLocalTimeZone } from '@internationalized/date'
 import {
   TitleComponent,
   TooltipComponent,
@@ -20,17 +19,15 @@ use([
   LegendComponent,
 ]);
 
-const selectedMonth = shallowRef(new CalendarDate(2025, 12, 1))
-
-const selectedMonthLabel = computed(() => {
-  if (selectedMonth.value) {
-    return selectedMonth.value.toDate('Asia/Shanghai').toLocaleDateString('zh-CN', { year: 'numeric', month: 'long' })
-  }
-  return '选择月份'
-})
+const startDate = ref()
+const endDate = ref()
 
 const categories = ref(['猫粮狗粮', '医疗费', '绝育手术'])
 const selectedCategory = ref()
+
+const searchByDateRange = async () => {
+  await refresh();
+}
 
 interface Expense {
   id: number
@@ -41,7 +38,12 @@ interface Expense {
   receipt_url: string
 }
 
-const { data: transactions } = await useFetch<Expense[]>('/api/expenses')
+const { data: transactions, refresh } = await useFetch<Expense[]>('/api/expenses', {
+  query: {
+    startDate: startDate.value,
+    endDate: endDate.value
+  }
+})
 
 const columns: TableColumn<Expense>[] = [
   { accessorKey: 'date', header: '日期' },
@@ -93,13 +95,10 @@ const chartOptions = ref({
     <h2 class="text-2xl font-semibold mb-4">财务报表</h2>
 
     <div class="flex gap-4 mb-4">
-      <UPopover :popper="{ placement: 'bottom-start' }">
-        <UButton color="neutral" :label="selectedMonthLabel" />
-        <template #panel="{ close }">
-          <UCalendar v-model="selectedMonth" @update:model-value="close" />
-        </template>
-      </UPopover>
+      <UInput v-model="startDate" type="date" placeholder="开始日期" />
+      <UInput v-model="endDate" type="date" placeholder="结束日期" />
       <USelectMenu v-model="selectedCategory" :items="categories" placeholder="选择分类" />
+      <UButton @click="searchByDateRange">搜索</UButton>
     </div>
     <UTable :columns="columns" :data="transactions">
       <template #actions-cell="{ row }">
