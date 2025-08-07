@@ -1,10 +1,11 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import type { TableColumn } from '@nuxt/ui'
 import VChart from 'vue-echarts';
 import { use } from 'echarts/core';
 import { CanvasRenderer } from 'echarts/renderers';
 import { PieChart } from 'echarts/charts';
+import { CalendarDate, getLocalTimeZone } from '@internationalized/date'
 import {
   TitleComponent,
   TooltipComponent,
@@ -19,8 +20,14 @@ use([
   LegendComponent,
 ]);
 
-const months = ref(['2025-07', '2025-06', '2025-05'])
-const selectedMonth = ref()
+const selectedMonth = shallowRef(new CalendarDate(2025, 12, 1))
+
+const selectedMonthLabel = computed(() => {
+  if (selectedMonth.value) {
+    return selectedMonth.value.toDate('Asia/Shanghai').toLocaleDateString('zh-CN', { year: 'numeric', month: 'long' })
+  }
+  return '选择月份'
+})
 
 const categories = ref(['猫粮狗粮', '医疗费', '绝育手术'])
 const selectedCategory = ref()
@@ -84,9 +91,14 @@ const chartOptions = ref({
 <template>
   <div>
     <h2 class="text-2xl font-semibold mb-4">财务报表</h2>
-    
+
     <div class="flex gap-4 mb-4">
-      <USelectMenu v-model="selectedMonth" :items="months" placeholder="选择月份" />
+      <UPopover :popper="{ placement: 'bottom-start' }">
+        <UButton color="neutral" :label="selectedMonthLabel" />
+        <template #panel="{ close }">
+          <UCalendar v-model="selectedMonth" @update:model-value="close" />
+        </template>
+      </UPopover>
       <USelectMenu v-model="selectedCategory" :items="categories" placeholder="选择分类" />
     </div>
     <UTable :columns="columns" :data="transactions">
